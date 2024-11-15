@@ -42,7 +42,7 @@ const slugSnail = "Slug/Snail";
 const algae = "Algae";
 
 const plants = [vascularPlant, fungi, nonVascularPlant, algae];
-const animals = [
+export const animals = [
 	mammal,
 	bird,
 	reptile,
@@ -202,8 +202,20 @@ const animalBiodiversitySorted = animalBiodiversity.sort(
 	(a, b) => b.totalAnimals - a.totalAnimals
 );
 
-// const [minPlants, maxPlants] = d3.extent(plantByPark.values());
-// const [minAnimals, maxAnimals] = d3.extent(animalsByPark.values());
+const plantTotals = [];
+plantByPark.values().forEach((d) => {
+	plantTotals.push(d.length);
+});
+
+const animalTotals = [];
+animalsByPark.values().forEach((d) => {
+	animalTotals.push(d.length);
+});
+
+const [minPlants, maxPlants] = d3.extent(plantTotals);
+const [minAnimals, maxAnimals] = d3.extent(animalTotals);
+const plantMinMax = { min: minPlants, max: maxPlants };
+const animalMinMax = { min: minAnimals, max: maxAnimals };
 
 // endangered species
 
@@ -285,8 +297,10 @@ export {
 	endangeredPlantsMap, // for treemap of endangered plants reference
 	//plant biodiversity (trees chart)
 	plantBiodervisitySorted,
+	plantMinMax,
 	//animal biodiversity (pie charts)
 	animalBiodiversitySorted,
+	animalMinMax,
 	//geojson
 	parkGeojson,
 };

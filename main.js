@@ -1,6 +1,6 @@
 import "./style.css";
 import * as d3 from "d3";
-
+import { createAnimalBiodiversityCircles } from "./charts";
 import {
 	//treemaps
 	endangeredAnimalsTreemapData, // for treemap of endangered animals
@@ -9,10 +9,12 @@ import {
 	endangeredPlantsMap, // for treemap of endangered plants reference
 	//plant biodiversity (trees chart)
 	plantBiodervisitySorted,
+	plantMinMax,
 	//animal biodiversity (pie charts)
 	animalBiodiversitySorted,
+	animalMinMax,
 	//geojson
 	parkGeojson,
 } from "./data_utils.js";
 
-console.log(endangeredAnimalsTreemapData);
+createAnimalBiodiversityCircles(animalBiodiversitySorted, animalMinMax);

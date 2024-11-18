@@ -17,4 +17,5 @@ import {
 	parkGeojson,
 } from "./data_utils.js";
 
-createAnimalBiodiversityCircles(animalBiodiversitySorted, animalMinMax);
+createAnimalBiodiversityCircles();
+// animalBiodiversitySorted, animalMinMax

@@ -3,20 +3,32 @@
 
 import "../style.css";
 import * as d3 from "d3";
-import { animals } from "../data_utils.js";
+import {
+	animals,
+	animalBiodiversitySorted as data,
+	animalMinMax,
+} from "../data_utils.js";
 
-const svgWidth = 800;
-const svgHeight = 800;
+const svgWidth = 1400;
 
 const margin = {
-	top: 10,
-	right: 10,
-	bottom: 10,
-	left: 10,
+	top: 20,
+	right: 20,
+	bottom: 20,
+	left: 20,
 };
 
-const circleSizeMin = 50;
-const circleSizeMax = 200;
+const perRow = 7;
+const perColumn = data.length / perRow;
+const drawableWidth = svgWidth - margin.left - margin.right;
+const spacePerCircle = drawableWidth / perRow;
+
+// const circleSizeMax = 60;
+const circleSizeMax = spacePerCircle / 2 - 10;
+const circleSizeMin = circleSizeMax / 3;
+
+// const svgHeight = 1000;
+const svgHeight = circleSizeMax * 2 * (perColumn + 1);
 
 let sizeScale;
 let svg;
@@ -24,11 +36,13 @@ let color;
 
 const animalChartDiv = d3.select("#animal_biodiversity_circles");
 
-const createPieChartCircle = (pieData, total, posX, posY) => {
-	const pie = d3.pie().value((d) => d.value);
-	const data_ready = pie(pieData);
+const createPieChartCircle = (posX, posY, parkData) => {
+	const { animalCategory, totalAnimals, park } = parkData;
 
-	const radius = sizeScale(total);
+	const pie = d3.pie().value((d) => d.value);
+	const data_ready = pie(animalCategory);
+
+	const radius = sizeScale(totalAnimals);
 	const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
 	svg
@@ -42,11 +56,19 @@ const createPieChartCircle = (pieData, total, posX, posY) => {
 		// .attr("stroke", "white")
 		.style("stroke-width", "1px")
 		.style("opacity", 1);
-	// .append("title")
-	// .text((d) => d.data.name);
+
+	svg
+		.append("text")
+		.data(data_ready)
+		.attr("x", posX)
+		.attr("y", posY - radius - 10)
+		.attr("text-anchor", "middle")
+		.style("font-size", "10px")
+		// .style("text-decoration", "underline")
+		.text(`${park.replace(/ National Park$/, "")}`);
 };
 
-export const createAnimalBiodiversityCircles = (data, animalMinMax) => {
+export const createAnimalBiodiversityCircles = () => {
 	sizeScale = d3
 		.scaleSqrt()
 		.domain([animalMinMax.min, animalMinMax.max])
@@ -72,17 +94,15 @@ export const createAnimalBiodiversityCircles = (data, animalMinMax) => {
 				.reverse()
 		);
 
-	const perRow = 4;
-	const maxSpaceWidthPerCircle = svgWidth - margin.left - margin.right / perRow;
-	for (let i = 0; i < 4; i++) {
-		// get posX and posY here and pass it to createPieChartCircle
-		// start with test for 4
+	for (let i = 0; i < data.length; i++) {
+		const col = i % perRow;
+		const row = Math.floor(i / perRow);
+
+		const posX = margin.left + circleSizeMax + spacePerCircle * col;
+		const posY = (spacePerCircle * 2) / 3 + row * spacePerCircle;
+		const parkData = data[i];
+		createPieChartCircle(posX, posY, parkData);
 	}
 
-	createPieChartCircle(
-		testPark.animalCategory,
-		testPark.totalAnimals,
-		svgWidth / 2,
-		svgHeight / 2
-	);
+	// createPieChartCircle(svgWidth / 2, svgHeight / 2, testPark);
 };

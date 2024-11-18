@@ -42,7 +42,7 @@ const slugSnail = "Slug/Snail";
 const algae = "Algae";
 
 const plants = [vascularPlant, fungi, nonVascularPlant, algae];
-export const animals = [
+const animals = [
 	mammal,
 	bird,
 	reptile,
@@ -301,6 +301,7 @@ export {
 	//animal biodiversity (pie charts)
 	animalBiodiversitySorted,
 	animalMinMax,
+	animals,
 	//geojson
 	parkGeojson,
 };

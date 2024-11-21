@@ -39,7 +39,7 @@ svg {
 #map {
 	border: 1px solid black;
 	height: 70vh;
-	background-color: aliceblue;
+	/* background-color: aliceblue; */
 	flex-grow: 3;
 }
 

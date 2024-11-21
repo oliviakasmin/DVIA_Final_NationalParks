@@ -1,6 +1,6 @@
 import "./style.css";
 import * as d3 from "d3";
-import { createAnimalBiodiversityCircles } from "./charts";
+import { createAnimalBiodiversityCircles, createMap } from "./charts";
 
 // add functionality to buttons
 
@@ -39,4 +39,5 @@ const animalsButton = d3.select("#animals_button");
 animalsButton.on("click", onClickAnimalsButton);
 
 // draw charts
+await createMap();
 createAnimalBiodiversityCircles();

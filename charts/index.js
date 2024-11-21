@@ -1,2 +1,4 @@
 import { createAnimalBiodiversityCircles } from "./animalBiodiversityCircles";
-export { createAnimalBiodiversityCircles };
+import { createEndangeredSpeciesTreemap } from "./endangeredSpeciesTreemap";
+
+export { createAnimalBiodiversityCircles, createEndangeredSpeciesTreemap };

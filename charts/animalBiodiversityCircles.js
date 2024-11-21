@@ -1,5 +1,7 @@
 // https://observablehq.com/@d3/pie-chart/2
 // https://d3-graph-gallery.com/graph/pie_basic.html
+// https://d3-graph-gallery.com/graph/pie_annotation.html
+// https://medium.com/@aleksej.gudkov/creating-a-pie-chart-with-d3-js-a-complete-guide-b69fd35268ea
 
 import "../style.css";
 import * as d3 from "d3";
@@ -22,12 +24,8 @@ const perRow = 7;
 const perColumn = data.length / perRow;
 const drawableWidth = svgWidth - margin.left - margin.right;
 const spacePerCircle = drawableWidth / perRow;
-
-// const circleSizeMax = 60;
 const circleSizeMax = spacePerCircle / 2 - 10;
-const circleSizeMin = circleSizeMax / 3;
-
-// const svgHeight = 1000;
+const circleSizeMin = circleSizeMax / 4;
 const svgHeight = circleSizeMax * 2 * (perColumn + 1);
 
 let sizeScale;
@@ -65,7 +63,7 @@ const createPieChartCircle = (posX, posY, parkData) => {
 		.attr("text-anchor", "middle")
 		.style("font-size", "10px")
 		// .style("text-decoration", "underline")
-		.text(`${park.replace(/ National Park$/, "")}`);
+		.text(`${park.replace(/ National Park$/, "")} (${totalAnimals})`);
 };
 
 export const createAnimalBiodiversityCircles = () => {
@@ -74,15 +72,13 @@ export const createAnimalBiodiversityCircles = () => {
 		.domain([animalMinMax.min, animalMinMax.max])
 		.range([circleSizeMin, circleSizeMax]);
 
-	const testPark = data[0];
-
 	svg = animalChartDiv
 		.append("svg")
 		.attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
 		.attr("width", svgWidth)
 		.attr("height", svgHeight)
-		.attr("class", "animal-biodiversity-circles")
-		.attr("id", "animal-biodiversity-circles");
+		.attr("class", "animal-biodiversity-circles-svg")
+		.attr("id", "animal-biodiversity-circles-svg");
 
 	// set the color scale
 	color = d3
@@ -103,6 +99,4 @@ export const createAnimalBiodiversityCircles = () => {
 		const parkData = data[i];
 		createPieChartCircle(posX, posY, parkData);
 	}
-
-	// createPieChartCircle(svgWidth / 2, svgHeight / 2, testPark);
 };

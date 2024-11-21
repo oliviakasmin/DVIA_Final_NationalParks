@@ -3,15 +3,54 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/p5.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap"
+			rel="stylesheet"
+		/>
 		<title>DVIA Final Project</title>
 	</head>
 	<body>
 		<div id="app">
-			<h1>Final Project</h1>
-			<div id="charts">
-				<div id="animal_biodiversity_circles"></div>
+			<h1>Biodiversity in U.S. National Parks</h1>
+			<h4>DVIA Final Project - Olivia Kasmin</h4>
+			<div id="map-container">
+				<div id="map">map goes here</div>
+				<div id="park_info">park info goes here</div>
+			</div>
+			<div id="arrow-container" class="buttonContainer">
+				<button id="down_arrow">down arrow</button>
+			</div>
+			<div id="biodiversity-charts">
+				<div id="biodiversity-buttons-container" class="buttonContainer">
+					<button id="plants_button">plants</button>
+					<button id="animals_button">animals</button>
+				</div>
+				<div id="charts-container">
+					<div id="plant_biodiversity_trees">tree chart</div>
+					<div id="animal_biodiversity_circles"></div>
+				</div>
+			</div>
+			<div id="bar-chart-container">
+				<div id="bar-chart-buttons" class="buttonContainer">
+					<label for="bar-chart-select">Choose data to display:</label>
+					<select name="bar-chart-select" id="bar-chart-select">
+						<option value="species">species</option>
+						<option value="species">other stuff</option>
+					</select>
+					<label for="bar-chart-sort">Sort by:</label>
+					<select name="bar-chart-sort" id="bar-chart-sort">
+						<option value="species">park</option>
+						<option value="species">total species</option>
+					</select>
+				</div>
+				<div id="bar-chart">bar chart here</div>
 			</div>
 		</div>
+		<div id="footer">footer</div>
 		<script type="module" async src="/main.js"></script>
 		<script type="module" async src="/data_utils.js"></script>
 	</body>

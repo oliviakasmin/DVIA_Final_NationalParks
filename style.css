@@ -1,15 +1,18 @@
 @import url("https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css");
 @import url("https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.12/latin.css");
 
+/* font: https://fonts.google.com/selection/embed */
 /* Styles can go here */
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: "Inconsolata", monospace;
+	font-optical-sizing: auto;
 	line-height: 1.5;
 	font-weight: 400;
+	font-style: normal;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
+
+	background-color: antiquewhite;
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -17,18 +20,68 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-body {
-	margin: 50px;
-	overflow: auto; /* Changed from scroll to auto */
-}
-
-/* Charts */
-
-.animal-biodiversity-circles {
+svg {
 	background-color: antiquewhite;
+	margin: 20px;
+	border: 1px solid black;
 }
 
 #app {
-	height: 200vh;
-	overflow: auto; /* Ensure overflow is set to auto */
+	overflow: scroll-y;
+	margin: 50px;
+}
+
+#map-container {
+	display: flex;
+	width: 100%;
+}
+
+#map {
+	border: 1px solid black;
+	height: 70vh;
+	background-color: aliceblue;
+	flex-grow: 3;
+}
+
+#park_info {
+	border: 1px solid black;
+	height: 70vh;
+	flex-grow: 1;
+}
+
+.buttonContainer {
+	border: 1px solid black;
+	height: 5vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 10px 0;
+}
+
+#biodiversity-charts {
+	width: 100%;
+}
+
+#bar-chart {
+	height: 80vh;
+	border: 1px solid black;
+	width: 100%;
+}
+
+#plant_biodiversity_trees {
+	display: visible;
+	height: 80vh;
+	border: 1px solid black;
+	width: 100%;
+}
+
+#footer {
+	width: 100%;
+	color: antiquewhite;
+	background-color: black;
+	border-top: 1px solid black;
+	padding: 10px;
+	text-align: center;
+	height: 5vh;
+	bottom: 0;
 }

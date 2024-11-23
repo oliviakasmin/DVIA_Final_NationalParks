@@ -91,7 +91,10 @@ const parksTotalSpeciesCount = d3.rollup(
 	(d) => d["Park Name"]
 );
 
+// console.log();
+
 const [minSpecies, maxSpecies] = d3.extent(parksTotalSpeciesCount.values());
+console.log({ minSpecies, maxSpecies });
 
 // add total species count to park geojson
 parkGeojson.features.forEach((feature) => {
@@ -217,6 +220,19 @@ const [minAnimals, maxAnimals] = d3.extent(animalTotals);
 const plantMinMax = { min: minPlants, max: maxPlants };
 const animalMinMax = { min: minAnimals, max: maxAnimals };
 
+const parkTotalsStackedBar = [];
+
+parksTotalSpeciesCount.forEach((total, park) => {
+	const totalPlants = plantByPark.get(park).length;
+	const totalAnimals = animalsByPark.get(park).length;
+	parkTotalsStackedBar.push({
+		park,
+		total,
+		totalPlants,
+		totalAnimals,
+	});
+});
+
 // endangered species
 
 // find all conservation status of species
@@ -304,4 +320,6 @@ export {
 	animals,
 	//geojson
 	parkGeojson,
+	//stacked bar chart
+	parkTotalsStackedBar,
 };

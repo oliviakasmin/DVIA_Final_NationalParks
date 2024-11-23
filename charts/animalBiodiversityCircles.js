@@ -11,7 +11,10 @@ import {
 	animalMinMax,
 } from "../data_utils.js";
 
-const svgWidth = 1400;
+const animalChartDiv = d3.select("#animal_biodiversity_circles");
+
+// const svgWidth = 1400;
+const svgWidth = animalChartDiv.node().clientWidth;
 
 const margin = {
 	top: 20,
@@ -32,8 +35,6 @@ let sizeScale;
 let svg;
 let color;
 
-const animalChartDiv = d3.select("#animal_biodiversity_circles");
-
 const createPieChartCircle = (posX, posY, parkData) => {
 	const { animalCategory, totalAnimals, park } = parkData;
 
@@ -43,17 +44,46 @@ const createPieChartCircle = (posX, posY, parkData) => {
 	const radius = sizeScale(totalAnimals);
 	const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
-	svg
+	const tooltip = d3
+		.select("body")
+		.append("div")
+		.attr("class", "tooltip")
+		.style("position", "absolute")
+		.style("background", "white")
+		.style("border", "1px solid #ccc")
+		.style("padding", "10px")
+		.style("display", "none");
+
+	const g = svg
 		.append("g")
 		.attr("transform", `translate(${posX}, ${posY})`)
-		.selectAll("whatever")
+		.on("click", () => {
+			console.log(parkData);
+		})
+		.selectAll("path")
 		.data(data_ready)
 		.join("path")
 		.attr("d", arc)
 		.attr("fill", (d) => color(d.data.name))
 		// .attr("stroke", "white")
 		.style("stroke-width", "1px")
-		.style("opacity", 1);
+		.style("opacity", 1)
+		.on("mouseover", (event, d) => {
+			const percent = ((d.data.value / totalAnimals) * 100).toFixed(2);
+			tooltip
+				.style("display", "block")
+				.html(
+					`<strong>${d.data.name}</strong><br>Count: ${d.data.value}<br>Percent: ${percent}%`
+				);
+		})
+		.on("mousemove", (event) => {
+			tooltip
+				.style("left", `${event.pageX + 10}px`)
+				.style("top", `${event.pageY + 10}px`);
+		})
+		.on("mouseout", () => {
+			tooltip.style("display", "none");
+		});
 
 	svg
 		.append("text")

@@ -1,8 +1,12 @@
 import "./style.css";
 import * as d3 from "d3";
-import { createAnimalBiodiversityCircles, createMap } from "./charts";
+import {
+	createAnimalBiodiversityCircles,
+	createMap,
+	createBarChart,
+} from "./charts";
 
-// add functionality to buttons
+import { parkTotalsStackedBar } from "./data_utils";
 
 // down arrows scroll to biodiversity charts
 const downArrowButton = d3.select("#down_arrow");
@@ -15,6 +19,8 @@ downArrowButton.on("click", () => {
 		behavior: "smooth",
 	});
 });
+
+// add functionality to plant/animal biodiversity buttons
 
 const plantBiodiversityChart = d3.select("#plant_biodiversity_trees");
 const animalBiodiversityChart = d3.select("#animal_biodiversity_circles");
@@ -38,6 +44,24 @@ plantsButton.on("click", onClickPlantsButton);
 const animalsButton = d3.select("#animals_button");
 animalsButton.on("click", onClickAnimalsButton);
 
+// add functionality to bar chart dropdowns
+let barChartData = parkTotalsStackedBar;
+
+const dataDropdown = d3.select("#bar-chart-select");
+const sortDropdown = d3.select("#bar-chart-sort");
+
+sortDropdown.on("change", function () {
+	const sortValue = d3.select(this).property("value");
+	if (sortValue === "park") {
+		barChartData.sort((a, b) => d3.ascending(a.park, b.park));
+	} else {
+		barChartData.sort((a, b) => b.total - a.total);
+	}
+	createBarChart(barChartData);
+});
+
 // draw charts
 await createMap();
 createAnimalBiodiversityCircles();
+
+createBarChart(barChartData);

@@ -91,10 +91,9 @@ const parksTotalSpeciesCount = d3.rollup(
 	(d) => d["Park Name"]
 );
 
-// console.log();
-
 const [minSpecies, maxSpecies] = d3.extent(parksTotalSpeciesCount.values());
-console.log({ minSpecies, maxSpecies });
+const totalSpeciesMaxMin = { min: minSpecies, max: maxSpecies };
+// console.log({ minSpecies, maxSpecies });
 
 // add total species count to park geojson
 parkGeojson.features.forEach((feature) => {
@@ -320,6 +319,7 @@ export {
 	animals,
 	//geojson
 	parkGeojson,
+	totalSpeciesMaxMin,
 	//stacked bar chart
 	parkTotalsStackedBar,
 };

@@ -59,10 +59,10 @@ export const createBarChart = (data) => {
 
 	const categories = ["totalPlants", "totalAnimals"];
 
-	const colorScale = d3
-		.scaleOrdinal()
-		.domain(categories)
-		.range(["#888d2a", "#6e66d4"]);
+	const colorScale = d3.scaleOrdinal().domain(categories).range([
+		"#888d2a", //green
+		"#6e66d4", //purple
+	]);
 
 	const stackedData = d3.stack().keys(categories)(data);
 

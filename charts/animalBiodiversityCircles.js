@@ -11,6 +11,17 @@ import {
 	animalMinMax,
 } from "../data_utils.js";
 
+console.log(data);
+const totalNative = [];
+const totalAnimals = [];
+data.forEach((d) => {
+	totalNative.push(d.percentNative);
+	totalAnimals.push(d.totalAnimals);
+});
+
+console.log(totalNative);
+console.log(totalAnimals);
+
 const animalChartDiv = d3.select("#animal_biodiversity_circles");
 
 // const svgWidth = 1400;
@@ -32,16 +43,28 @@ const circleSizeMin = circleSizeMax / 4;
 const svgHeight = circleSizeMax * 2 * (perColumn + 1);
 
 let sizeScale;
-let svg;
+// let svg;
 let color;
 
-const createPieChartCircle = (posX, posY, parkData) => {
+export const createPieChartCircle = (
+	posX,
+	posY,
+	parkData,
+	svg,
+	circleRadius = undefined
+) => {
 	const { animalCategory, totalAnimals, park } = parkData;
 
 	const pie = d3.pie().value((d) => d.value);
 	const data_ready = pie(animalCategory);
 
-	const radius = sizeScale(totalAnimals);
+	let radius;
+	if (circleRadius) {
+		radius = circleRadius;
+	} else {
+		radius = sizeScale(totalAnimals);
+	}
+
 	const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
 	const tooltip = d3
@@ -85,16 +108,25 @@ const createPieChartCircle = (posX, posY, parkData) => {
 			tooltip.style("display", "none");
 		});
 
-	svg
-		.append("text")
-		.data(data_ready)
-		.attr("x", posX)
-		.attr("y", posY - radius - 10)
-		.attr("text-anchor", "middle")
-		.style("font-size", "10px")
-		// .style("text-decoration", "underline")
-		.text(`${park.replace(/ National Park$/, "")} (${totalAnimals})`);
+	if (!circleRadius) {
+		svg
+			.append("text")
+			.data(data_ready)
+			.attr("x", posX)
+			.attr("y", posY - radius - 10)
+			.attr("text-anchor", "middle")
+			.style("font-size", "10px")
+			.text(
+				`${park.replace(
+					/ National Parks?( and Preserve)?$/,
+					""
+				)} (${totalAnimals})`
+			);
+		// .text(`${park.replace(/ National Park$/, "")} (${totalAnimals})`);
+	}
 };
+
+// National Parks?( and Preserve)?$/
 
 export const createAnimalBiodiversityCircles = () => {
 	sizeScale = d3
@@ -102,7 +134,7 @@ export const createAnimalBiodiversityCircles = () => {
 		.domain([animalMinMax.min, animalMinMax.max])
 		.range([circleSizeMin, circleSizeMax]);
 
-	svg = animalChartDiv
+	const svg = animalChartDiv
 		.append("svg")
 		.attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
 		.attr("width", svgWidth)
@@ -127,6 +159,6 @@ export const createAnimalBiodiversityCircles = () => {
 		const posX = margin.left + circleSizeMax + spacePerCircle * col;
 		const posY = (spacePerCircle * 2) / 3 + row * spacePerCircle;
 		const parkData = data[i];
-		createPieChartCircle(posX, posY, parkData);
+		createPieChartCircle(posX, posY, parkData, svg);
 	}
 };

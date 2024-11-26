@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+	base: process.env.CI === true ? "/DVIA_Final_NationalParks/" : "/",
 	build: {
 		target: "esnext", //browsers can handle the latest ES features
 	},

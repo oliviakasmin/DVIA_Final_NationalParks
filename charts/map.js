@@ -3,11 +3,26 @@ import * as d3 from "d3";
 import "leaflet";
 import "leaflet.markercluster";
 import { parkGeojson } from "../data_utils.js";
+import { createPieChartCircle } from "./animalBiodiversityCircles.js";
+import {
+	// animals,
+	animalBiodiversitySorted,
+	// animalMinMax,
+} from "../data_utils.js";
 
 export const createMap = async () => {
 	const mapElement = d3.select("#map");
+	// const parkInfoElement = d3.select("#park_info");
+	const mapPieChartElement = d3.select("#map-pie-chart");
+	const svg = mapPieChartElement.append("svg");
+	const svgWidth = mapPieChartElement.node().clientWidth - 50;
 
-	console.log(parkGeojson);
+	const mapParkNameElement = d3.select("#map-park-name");
+	mapParkNameElement.text("Click on a park to learn more");
+	const mapParkAcresElement = d3.select("#map-acres");
+	const mapPieChartTitleElement = d3.select("#map-pie-chart-title");
+
+	// console.log(parkGeojson);
 
 	// const parksGeoJson = await d3.json("../data/parks.geojson");
 
@@ -16,26 +31,16 @@ export const createMap = async () => {
 	const initialZoom = 3;
 	const map = L.map(mapElement.node()).setView(centerUS, initialZoom);
 
-	// Tile Layer
-	const tileLayer = L.tileLayer(
-		"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-		{
-			attribution:
-				'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		}
-	);
+	// Tile Layer (original)
+	// const tileLayer = L.tileLayer(
+	// 	"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+	// 	{
+	// 		attribution:
+	// 			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	// 	}
+	// );
 
-	const tileLayer2 = L.tileLayer(
-		"https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.{ext}",
-		{
-			// minZoom: 0,
-			// maxZoom: 18,
-			attribution:
-				'&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			ext: "png",
-		}
-	);
-
+	// dark terrain
 	var tileLayer3 = L.tileLayer(
 		"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
 		// {
@@ -44,18 +49,37 @@ export const createMap = async () => {
 		// }
 	);
 
+	var Esri_WorldTopoMap = L.tileLayer(
+		"https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+		// {
+		// 	attribution:
+		// 		"Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community",
+		// }
+	);
+
+	const Esri_WorldTopoMap_Low = "#605b01";
+	const Esri_WorldTopoMap_High = "#f66006";
+
 	// Add tile layer to the map
-	tileLayer3.addTo(map);
+	Esri_WorldTopoMap.addTo(map);
 
 	const radius = d3.scaleSqrt(
 		[0, d3.max(parkGeojson.features, (d) => d.properties.Acres)],
 		[0, 20]
 	);
 
-	const maxParkColor = "#6e66d4";
+	const maxParkColor = Esri_WorldTopoMap_High;
+	// "#fa06e6";
+	//
+	// "#06fa08";
+	// "#6e66d4";
 	// "#1b8e13"; green
-	const leastParkColor = "#f3f9ac";
-	// "#b68400"; mustar
+	const leastParkColor = Esri_WorldTopoMap_Low;
+	// "#0569f7";
+	//  "#ff7f38";
+	// "#ffa938";
+	// "#f3f9ac";
+	// "#b68400"; mustard
 
 	// Create a color scale based on relativeTotalSpecies
 	const colorScale = d3
@@ -64,9 +88,25 @@ export const createMap = async () => {
 		.range([leastParkColor, maxParkColor])
 		.interpolate(d3.interpolateRgb);
 
+	// Create a tooltip element
+	const tooltip = d3
+		.select("body")
+		.append("div")
+		.attr("class", "tooltip")
+		.style("position", "absolute")
+		.style("background", "white")
+		// .style("border", "1px solid #ccc")
+		.style("padding", "5px")
+		.style("display", "none")
+		.style("z-index", "1000")
+		.style("border-radius", "5px");
+
 	const parkMarkers = L.layerGroup();
+	let lastClickedMarker = null;
+
 	for (const feature of parkGeojson.features) {
 		const { speciesCount, Acres } = feature.properties;
+		const parkName = feature.properties["Park Name"];
 
 		const marker = L.circleMarker(
 			[feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
@@ -77,24 +117,66 @@ export const createMap = async () => {
 				radius: radius(Acres),
 			}
 		);
-		marker.bindPopup(
-			`<p><b>${feature.properties["Park Name"]}</b></p>
-			<p>Acres: ${Acres}</p>
-			<p>Species: ${speciesCount}</p>`
-		);
+		marker.on("click", () => {
+			const parkData = animalBiodiversitySorted.filter(
+				(d) => d.park === parkName
+			)[0];
+			console.log(parkData);
+
+			mapParkNameElement.text(parkName);
+			mapParkAcresElement.text(`Acres: ${Acres}`);
+			mapPieChartTitleElement.text(`Animal Species: ${parkData.totalAnimals}`);
+
+			svg.selectAll("*").remove();
+
+			svg
+				.attr("viewBox", `0 0 ${svgWidth} ${svgWidth}`)
+				.attr("width", svgWidth)
+				.attr("height", svgWidth);
+
+			createPieChartCircle(
+				svgWidth / 2,
+				svgWidth / 2,
+				parkData,
+				svg,
+				svgWidth / 3
+			);
+
+			// Remove the park-selected class from the last clicked marker
+			if (lastClickedMarker) {
+				lastClickedMarker.getElement().classList.remove("park-selected");
+			}
+
+			// Add the park-selected class to the clicked marker
+			marker.getElement().classList.add("park-selected");
+
+			// Update the last clicked marker
+			lastClickedMarker = marker;
+		});
+		marker.on("mouseover", (event) => {
+			tooltip
+				.style("display", "block")
+				.text(`${parkName}`)
+				.style("left", `${event.originalEvent.pageX + 10}px`)
+				.style("top", `${event.originalEvent.pageY}px`);
+		});
+		marker.on("mouseout", () => {
+			tooltip.style("display", "none");
+		});
+
 		parkMarkers.addLayer(marker);
 	}
 
-	const parksLayer = L.geoJSON(parkGeojson, {
-		onEachFeature: (feature, layer) => {
-			layer.bindPopup(feature.properties["Park Name"]);
-		},
-	});
+	// const parksLayer = L.geoJSON(parkGeojson, {
+	// 	onEachFeature: (feature, layer) => {
+	// 		layer.bindPopup(feature.properties["Park Name"]);
+	// 	},
+	// });
 
 	parkMarkers.addTo(map);
 
 	// Add legend for color scale
-	const colorLegend = L.control({ position: "bottomright" });
+	const colorLegend = L.control({ position: "topright" });
 	colorLegend.onAdd = function (map) {
 		const div = L.DomUtil.create("div", "info legend");
 		const grades = d3.extent(

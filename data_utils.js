@@ -8,6 +8,13 @@ const getSpeciesData = async () => {
 		console.error("Error loading species data", err);
 	}
 };
+const getParkData = async () => {
+	try {
+		return await d3.csv("data/parks.csv");
+	} catch (err) {
+		console.error("Error loading parks data", err);
+	}
+};
 const getParkGeojson = async () => {
 	try {
 		return await d3.json("data/parks.geojson");
@@ -18,6 +25,13 @@ const getParkGeojson = async () => {
 
 const speciesData = await getSpeciesData();
 const parkGeojson = await getParkGeojson();
+const parksData = await getParkData();
+
+const parkDataMap = d3.group(parksData, (d) => d["Park Name"]);
+
+const getParkCode = (parkName) => {
+	return parkDataMap.get(parkName)[0]["Park Code"];
+};
 
 // find all categories of species
 // const categories = d3.rollup(
@@ -143,6 +157,7 @@ plantByPark.forEach((value, key) => {
 	const totalNonNative = nativeDivide.get(nonNative) || 0;
 	const totalUknownNative = totalPlants - totalNative - totalNonNative;
 	const percentNative = totalNative / totalPlants;
+	const parkCode = getParkCode(key);
 
 	return plantBiodervisity.push({
 		park: key,
@@ -153,6 +168,7 @@ plantByPark.forEach((value, key) => {
 			totalUknownNative,
 		},
 		percentNative,
+		parkCode,
 	});
 });
 

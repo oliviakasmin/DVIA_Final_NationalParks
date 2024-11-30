@@ -1,10 +1,10 @@
 import "../style.css";
 import * as d3 from "d3";
-import { plantBiodervisitySorted, plantMinMax } from "../data_utils.js";
+import { plantColor, animalColor } from "../design_utils";
 
-const plantChartDiv = d3.select("#plant_biodiversity_trees");
-const svgWidth = plantChartDiv.node().clientWidth;
-const svgHeight = plantChartDiv.node().clientHeight;
+const chartDiv = d3.select("#scatterplot");
+const svgWidth = chartDiv.node().clientWidth;
+const svgHeight = chartDiv.node().clientHeight;
 
 const margin = {
 	top: 100,
@@ -13,10 +13,14 @@ const margin = {
 	left: 100,
 };
 
-// console.log(plantBiodervisitySorted);
+export const createBiodiversityScatter = (data, type) => {
+	const plotImage = type === "plant" ? "🍁" : "🐿️";
+	const fillColor = type === "plant" ? plantColor : animalColor;
+	const highlightColor = type === "plant" ? animalColor : plantColor;
 
-export const createPlantBiodiversityScatter = () => {
-	const svg = plantChartDiv
+	chartDiv.selectAll("svg").remove();
+
+	const svg = chartDiv
 		.append("svg")
 		.attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
 		.attr("width", svgWidth)
@@ -25,11 +29,9 @@ export const createPlantBiodiversityScatter = () => {
 	const axesLayer = svg.append("g").attr("class", "axes");
 	const plotLayer = svg.append("g").attr("class", "circlePlots");
 
-	console.log(plantMinMax);
-
 	const xScale = d3
 		.scaleLinear()
-		.domain([0, d3.max(plantBiodervisitySorted, (d) => d.totalPlants)])
+		.domain([0, d3.max(data, (d) => d.totalSpecies)])
 		.range([margin.left, svgWidth - margin.right]);
 	const yScale = d3
 		.scaleLinear()
@@ -79,32 +81,40 @@ export const createPlantBiodiversityScatter = () => {
 
 	//append the data points
 	plotLayer
-		.selectAll("circle")
-		.data(plantBiodervisitySorted)
+		.selectAll("text")
+		.data(data)
 		.enter()
 		.append("circle")
-		.attr("cx", (d) => xScale(d.totalPlants))
+		.attr("cx", (d) => xScale(d.totalSpecies))
 		.attr("cy", (d) => yScale(d.percentNative))
 		.attr("r", 5)
-		.attr("fill", "steelblue")
+		.attr("fill", fillColor)
+		// .append("text")
+		// .attr("x", (d) => {
+		// 	return xScale(d.totalSpecies);
+		// })
+		// .attr("y", (d) => yScale(d.percentNative))
+		// .attr("font-size", "16px")
+		// .attr("text-anchor", "middle")
+		// .attr("dy", ".35em")
+		// .text(plotImage)
 		.on("mouseover", (event, d) => {
 			//show tooltip
 			tooltip
 				.style("display", "block")
 				.html(
 					`${d.park}<br>
-                    total plants: ${d.totalPlants}<br>
+                    total species: ${d.totalSpecies}<br>
                     percent native: ${parseFloat(d.percentNative.toFixed(2))}
                     `
 				)
 				.style("left", `${event.pageX + 10}px`)
 				.style("top", `${event.pageY + 10}px`);
-			d3.select(event.target).attr("fill", "orange");
-			// console.log(event.target);
+			d3.select(event.target).attr("fill", highlightColor);
 		})
 		.on("mouseout", (event, d) => {
 			//hide tooltip
 			tooltip.style("display", "none");
-			d3.select(event.target).attr("fill", "steelblue");
+			d3.select(event.target).attr("fill", fillColor);
 		});
 };

@@ -1,52 +1,66 @@
 import "./style.css";
 import * as d3 from "d3";
-import {
-	createAnimalBiodiversityCircles,
-	createMap,
-	createBarChart,
-	createPlantBiodiversityTrees,
-	createPlantBiodiversityScatter,
-} from "./charts";
+import { createMap, createBarChart, createBiodiversityScatter } from "./charts";
 
-import { parkTotalsStackedBar } from "./data_utils";
+import {
+	parkTotalsStackedBar,
+	endangeredSpeciesStackedBar,
+	plantBiodervisitySorted,
+	animalBiodiversitySorted,
+} from "./data_utils";
 
 // down arrows scroll to biodiversity charts
 const downArrowButton = d3.select("#down_arrow");
-const biodiversityDivElement = document.getElementById("biodiversity-charts"); // Replace 'yourDivId' with the actual ID of your div
-const yCoordinateBiodiversity =
-	biodiversityDivElement.getBoundingClientRect().top;
+const scatterChartSection = document.getElementById("native-scattter-section");
+
 downArrowButton.on("click", () => {
-	window.scrollBy({
-		top: yCoordinateBiodiversity,
-		behavior: "smooth",
-	});
+	scatterChartSection.scrollIntoView({ behavior: "smooth" });
 });
 
 // add functionality to plant/animal biodiversity buttons
-
-const plantBiodiversityChart = d3.select("#plant_biodiversity_trees");
-const animalBiodiversityChart = d3.select("#animal_biodiversity_circles");
-animalBiodiversityChart.style("display", "none"); // hide animal chart by default
 const biodiversityTitle = d3.select("#biodiversity-title");
 
+const plantsButton = d3.select("#plants_button");
+const animalsButton = d3.select("#animals_button");
+
+createBiodiversityScatter(plantBiodervisitySorted, "plant");
+animalsButton
+	.style("display", "block")
+	.classed("animalButtonNotSelected", true)
+	.classed("animalButtonSelected", false);
+plantsButton
+	.style("display", "block")
+	.classed("plantButtonSelected", true)
+	.classed("plantButtonNotSelected", false);
+
 const onClickPlantsButton = () => {
-	console.log("plants button clicked");
-	plantBiodiversityChart.style("display", "block");
-	animalBiodiversityChart.style("display", "none");
 	biodiversityTitle.text("Plant Biodiversity");
+	createBiodiversityScatter(plantBiodervisitySorted, "plant");
+
+	animalsButton
+		.style("display", "block")
+		.classed("animalButtonNotSelected", true)
+		.classed("animalButtonSelected", false);
+	plantsButton
+		.style("display", "block")
+		.classed("plantButtonSelected", true)
+		.classed("plantButtonNotSelected", false);
 };
 
 const onClickAnimalsButton = () => {
-	console.log("animals button clicked");
-	animalBiodiversityChart.style("display", "block");
-	plantBiodiversityChart.style("display", "none");
 	biodiversityTitle.text("Animal Biodiversity");
+	createBiodiversityScatter(animalBiodiversitySorted, "animal");
+	animalsButton
+		.style("display", "block")
+		.classed("animalButtonSelected", true)
+		.classed("animalButtonNotSelected", false);
+	plantsButton
+		.style("display", "block")
+		.classed("plantButtonNotSelected", true)
+		.classed("plantButtonSelected", false);
 };
 
-const plantsButton = d3.select("#plants_button");
 plantsButton.on("click", onClickPlantsButton);
-
-const animalsButton = d3.select("#animals_button");
 animalsButton.on("click", onClickAnimalsButton);
 
 // add functionality to bar chart dropdowns
@@ -55,21 +69,34 @@ let barChartData = parkTotalsStackedBar;
 const dataDropdown = d3.select("#bar-chart-select");
 const sortDropdown = d3.select("#bar-chart-sort");
 
+const sortData = (data, sortValue) => {
+	if (sortValue === "park") {
+		return data.sort((a, b) => d3.ascending(a.park, b.park));
+	} else {
+		return data.sort((a, b) => b.total - a.total);
+	}
+};
+
+dataDropdown.on("change", function () {
+	const sortValue = sortDropdown.property("value");
+
+	const dataValue = d3.select(this).property("value");
+	if (dataValue === "all") {
+		barChartData = parkTotalsStackedBar;
+	} else if (dataValue === "endangered") {
+		barChartData = endangeredSpeciesStackedBar;
+	}
+	barChartData = sortData(barChartData, sortValue);
+	createBarChart(barChartData);
+});
+
 sortDropdown.on("change", function () {
 	const sortValue = d3.select(this).property("value");
-	if (sortValue === "park") {
-		barChartData.sort((a, b) => d3.ascending(a.park, b.park));
-	} else {
-		barChartData.sort((a, b) => b.total - a.total);
-	}
+	barChartData = sortData(barChartData, sortValue);
 	createBarChart(barChartData);
 });
 
 // draw charts
 await createMap();
-createAnimalBiodiversityCircles();
 
 createBarChart(barChartData);
-
-// createPlantBiodiversityTrees();
-createPlantBiodiversityScatter();

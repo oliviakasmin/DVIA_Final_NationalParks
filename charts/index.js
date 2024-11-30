@@ -1,19 +1,22 @@
-import {
-	createAnimalBiodiversityCircles,
-	createPieChartCircle,
-} from "./animalBiodiversityCircles";
+// import {
+// 	createAnimalBiodiversityCircles,
+// 	createPieChartCircle,
+// } from "./animalBiodiversityCircles";
 import { createEndangeredSpeciesTreemap } from "./endangeredSpeciesTreemap";
 import { createMap } from "./map";
 import { createBarChart } from "./barChart";
 import { createPlantBiodiversityTrees } from "./plantBiodiversityTrees";
-import { createPlantBiodiversityScatter } from "./plantBiodiversityScatter";
+import { createBiodiversityScatter } from "./biodiversityScatter";
+
+import { createSpeciesCategoriesTreeMap } from "./speciesCategoriesTreemap";
 
 export {
-	createAnimalBiodiversityCircles,
+	// createAnimalBiodiversityCircles,
 	createEndangeredSpeciesTreemap,
 	createMap,
 	createBarChart,
-	createPieChartCircle,
+	// createPieChartCircle,
 	createPlantBiodiversityTrees,
-	createPlantBiodiversityScatter,
+	createBiodiversityScatter,
+	createSpeciesCategoriesTreeMap,
 };

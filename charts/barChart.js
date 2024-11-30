@@ -1,6 +1,8 @@
 import "../style.css";
 import * as d3 from "d3";
 
+import { palette, parkNameDisplay } from "../design_utils";
+
 const barChartDiv = d3.select("#bar-chart");
 const svgWidth = barChartDiv.node().clientWidth;
 const svgHeight = barChartDiv.node().clientHeight;
@@ -8,8 +10,8 @@ const svgHeight = barChartDiv.node().clientHeight;
 const margin = {
 	top: 20,
 	right: 20,
-	bottom: 200,
-	left: 40,
+	bottom: 160,
+	left: 60,
 };
 
 const svg = barChartDiv
@@ -19,12 +21,18 @@ const svg = barChartDiv
 	.attr("height", svgHeight);
 
 export const createBarChart = (data) => {
-	// console.log("bar chart data", data);
-
 	svg.selectAll("*").remove();
 
 	const axesLayer = svg.append("g").attr("class", "axes");
 	const barsLayer = svg.append("g").attr("class", "bars");
+
+	const categories = data[0].categories;
+
+	const colorScale = d3.scaleOrdinal().domain(categories).range(palette);
+
+	const stackedData = d3.stack().keys(categories)(data);
+
+	console.log(stackedData);
 
 	const xScale = d3
 		.scaleBand()
@@ -49,22 +57,15 @@ export const createBarChart = (data) => {
 
 	axesLayer
 		.append("g")
+		.data(stackedData)
 		.attr("transform", `translate(0 ${svgHeight - margin.bottom})`)
 		.call(d3.axisBottom(xScale))
 		.selectAll("text")
-		.attr("transform", "rotate(-90)")
+		.attr("transform", "rotate(-60)")
 		.style("text-anchor", "end")
-		.attr("dx", "-0.5em")
-		.attr("dy", "-0.5em");
-
-	const categories = ["totalPlants", "totalAnimals"];
-
-	const colorScale = d3.scaleOrdinal().domain(categories).range([
-		"#888d2a", //green
-		"#6e66d4", //purple
-	]);
-
-	const stackedData = d3.stack().keys(categories)(data);
+		.attr("dx", "-1.5em")
+		.attr("dy", "0.5em")
+		.text((d) => parkNameDisplay(d));
 
 	barsLayer
 		.selectAll("g")
@@ -79,7 +80,10 @@ export const createBarChart = (data) => {
 		.append("rect")
 		.attr("x", (d) => xScale(d.data.park))
 		.attr("y", (d) => yScale(d[1]))
-		.attr("height", (d) => yScale(d[0]) - yScale(d[1]))
+		.attr("height", (d) => {
+			// console.log(d);
+			return yScale(d[0]) - yScale(d[1]);
+		})
 		.attr("width", xScale.bandwidth());
 
 	// Add legend

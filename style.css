@@ -20,40 +20,78 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-svg {
-	/* background-color: antiquewhite; */
-	/* margin: 20px; */
-	/* border: 1px solid black; */
-}
-
 #app {
 	overflow: scroll-y;
-	margin: 50px;
+	margin: 80px;
+}
+
+#title-page {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#nps-logo {
+	width: 200px;
 }
 
 #map-container {
 	display: flex;
 	width: 100%;
-	border: 1px solid black;
+	/* border: 1px solid black; */
 }
 
 #map {
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	height: 70vh;
 	/* background-color: aliceblue; */
 	/* flex-grow: 3; */
 	width: 70%;
+	/* margin-right: 10px; */
+	margin: 20px;
 }
 
 #park_info {
-	border: 1px solid black;
+	margin: 20px;
+	border-radius: 5px;
 	height: 70vh;
 	/* flex-grow: 1; */
 	width: 30%;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	text-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	padding-left: 24px;
+	position: relative; /* Ensure the container is positioned relative */
+}
+
+.park_info_open {
+	border: 0.25px solid black;
+}
+.park_info_closed {
+	border: none;
+}
+
+#park_info_x {
+	position: absolute; /* Add this line */
+	top: 10px; /* Adjust as needed */
+	right: 10px; /* Adjust as needed */
+	background: none;
+	border: none;
+	font-size: 16px;
+	cursor: pointer;
+	z-index: 10;
+}
+
+#species-category-treemap {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	align-self: center;
+	justify-content: center;
 }
 
 .park-selected {
@@ -61,8 +99,17 @@ svg {
 	stroke-width: 4px;
 }
 
+#park_info_data_maps_container {
+	width: 100%;
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
 .buttonContainer {
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	height: 5vh;
 	display: flex;
 	align-items: center;
@@ -75,14 +122,14 @@ svg {
 }
 
 #bar-chart {
-	height: 80vh;
+	height: 70vh;
 	border: 1px solid black;
 	width: 100%;
 }
 
-#plant_biodiversity_trees {
-	display: visible;
-	height: 80vh;
+#scatterplot {
+	display: block;
+	height: 70vh;
 	border: 1px solid black;
 	width: 100%;
 }
@@ -96,4 +143,72 @@ svg {
 	text-align: center;
 	height: 5vh;
 	bottom: 0;
+}
+
+#down_arrow {
+	background: none;
+	border: none;
+	&:hover {
+		cursor: pointer;
+		font-size: larger;
+		/* text-decoration: underline; */
+		/* text-decoration-color: #888d2a; */
+		/* color: #888d2a; */
+		/* font-weight: bold; */
+	}
+}
+
+/* #down_arrow:hover {
+	cursor: pointer;
+	font-size: larger;
+	text-decoration: underline;
+	text-decoration-color: #888d2a;
+} */
+
+#arrow-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top: 32px;
+}
+
+.hidden {
+	display: none;
+}
+
+.treemapButtons {
+	font-size: medium;
+}
+
+.animalButtonSelected {
+	background-color: #6e66d4;
+	color: antiquewhite;
+}
+
+.animalButtonNotSelected {
+	background-color: inherit;
+	color: #6e66d4;
+	border: 1px solid #6e66d4;
+}
+
+.plantButtonSelected {
+	background-color: #888d2a;
+	color: antiquewhite;
+}
+
+.plantButtonNotSelected {
+	background-color: inherit;
+	color: #888d2a;
+	border: 1px solid #888d2a;
+}
+
+button {
+	border: none;
+	padding: 5px;
+	margin: 5px;
+	border-radius: 5px;
+	&:hover {
+		cursor: pointer;
+		font-weight: bold;
+	}
 }

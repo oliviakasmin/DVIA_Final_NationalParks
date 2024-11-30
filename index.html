@@ -22,53 +22,95 @@
 	</head>
 	<body>
 		<div id="app">
-			<h1>Biodiversity in U.S. National Parks</h1>
-			<div id="map-container">
-				<div id="map"></div>
-				<div id="park_info">
-					<!-- <div>Click a park to discover more</div> -->
-					<h4 id="map-park-name">
-						<!-- Park Name Here -->
+			<section id="intro-section">
+				<div id="title-page">
+					<h1>Exploring Biodiversity in U.S. National Parks</h1>
+					<image
+						src="public/assets/National_Park_Service_logo_PNG3.png"
+						alt="national parks"
+						id="nps-logo"
+					/>
+				</div>
+			</section>
+			<section id="map-section">
+				<h3>
+					Check out this map to discover how many species live in each park and
+					compare the size of the parks
+				</h3>
+				<div id="map-container">
+					<div id="map"></div>
+					<div id="park_info">
+						<button id="park_info_x" class="hidden">x</button>
+						<div id="park_info_data_maps_container">
+							<h4 id="map-park-name"></h4>
+							<div id="map-acres"></div>
+							<div class="buttonContainer">
+								<button
+									id="animals_button_treemap"
+									class="animals_button hidden treemapButtons"
+								>
+									animals
+								</button>
+								<button
+									id="plants_button_treemap"
+									class="plants_button hidden treemapButtons"
+								>
+									plants
+								</button>
+							</div>
+							<div id="treemap_title"></div>
+							<div id="species-category-treemap"></div>
+						</div>
+					</div>
+				</div>
+				<div id="arrow-container" class="buttonContainer">
+					<button id="down_arrow">
+						<div>discover more</div>
+						<img
+							src="public/assets/icons8-down-arrow-50.png"
+							alt="down arrow"
+						/>
+					</button>
+				</div>
+			</section>
+			<section id="native-scattter-section">
+				<div id="biodiversity-charts">
+					<h3>
+						Consider the impact of non-native species on biodiversity in parks
+					</h3>
+					<h4>
+						The parks with the largest number of species have the fewest percent
+						of native species.
 					</h4>
-					<div id="map-acres">
-						<!-- Acres here: -->
+					<div id="biodiversity-buttons-container" class="buttonContainer">
+						<button id="plants_button" class="plants_button">plants</button>
+						<button id="animals_button" class="animals_button">animals</button>
 					</div>
-					<div id="map-pie-chart-title">
-						<!-- Animals species breakdown: -->
+					<h4 id="biodiversity-title">Plant Biodiversity</h4>
+					<div id="charts-container">
+						<div id="scatterplot"></div>
 					</div>
-					<!-- <h5>Animal species category distribution</h5> -->
-					<div id="map-pie-chart"></div>
 				</div>
-			</div>
-			<div id="arrow-container" class="buttonContainer">
-				<button id="down_arrow">down arrow</button>
-			</div>
-			<div id="biodiversity-charts">
-				<div id="biodiversity-buttons-container" class="buttonContainer">
-					<button id="plants_button">plants</button>
-					<button id="animals_button">animals</button>
+			</section>
+			<section id="bar-section">
+				<div id="bar-chart-container">
+					<h2>Explore</h2>
+					<h4>Compare biodiversity across all U.S. parks!</h4>
+					<div id="bar-chart-buttons" class="buttonContainer">
+						<label for="bar-chart-select">Choose data to display:</label>
+						<select name="bar-chart-select" id="bar-chart-select">
+							<option value="all">all species</option>
+							<option value="endangered">endangered species</option>
+						</select>
+						<label for="bar-chart-sort">Sort by:</label>
+						<select name="bar-chart-sort" id="bar-chart-sort">
+							<option value="park">park</option>
+							<option value="biodiversity">biodiversity</option>
+						</select>
+					</div>
+					<div id="bar-chart"></div>
 				</div>
-				<h4 id="biodiversity-title">Plant Biodiversity</h4>
-				<div id="charts-container">
-					<div id="plant_biodiversity_trees"></div>
-					<div id="animal_biodiversity_circles"></div>
-				</div>
-			</div>
-			<div id="bar-chart-container">
-				<div id="bar-chart-buttons" class="buttonContainer">
-					<label for="bar-chart-select">Choose data to display:</label>
-					<select name="bar-chart-select" id="bar-chart-select">
-						<option value="all">all species</option>
-						<option value="endangered">endangered species</option>
-					</select>
-					<label for="bar-chart-sort">Sort by:</label>
-					<select name="bar-chart-sort" id="bar-chart-sort">
-						<option value="park">park</option>
-						<option value="value">value</option>
-					</select>
-				</div>
-				<div id="bar-chart"></div>
-			</div>
+			</section>
 		</div>
 		<div id="footer">DVIA Final Project - Olivia Kasmin</div>
 		<script type="module" async src="/main.js"></script>

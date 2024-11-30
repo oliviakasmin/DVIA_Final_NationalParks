@@ -107,7 +107,6 @@ const parksTotalSpeciesCount = d3.rollup(
 
 const [minSpecies, maxSpecies] = d3.extent(parksTotalSpeciesCount.values());
 const totalSpeciesMaxMin = { min: minSpecies, max: maxSpecies };
-// console.log({ minSpecies, maxSpecies });
 
 // add total species count to park geojson
 parkGeojson.features.forEach((feature) => {
@@ -147,7 +146,7 @@ const plantByPark = divideSpecicies.get(true);
 const plantBiodervisity = [];
 
 plantByPark.forEach((value, key) => {
-	const totalPlants = value.length;
+	const totalSpecies = value.length;
 	const nativeDivide = d3.rollup(
 		value,
 		(v) => v.length,
@@ -155,13 +154,24 @@ plantByPark.forEach((value, key) => {
 	);
 	const totalNative = nativeDivide.get(native) || 0;
 	const totalNonNative = nativeDivide.get(nonNative) || 0;
-	const totalUknownNative = totalPlants - totalNative - totalNonNative;
-	const percentNative = totalNative / totalPlants;
+	const totalUknownNative = totalSpecies - totalNative - totalNonNative;
+	const percentNative = totalNative / totalSpecies;
 	const parkCode = getParkCode(key);
+
+	const plantCategoryMap = d3.rollup(
+		value,
+		(v) => v.length,
+		(d) => d.Category
+	);
+
+	const plantCategory = Array.from(plantCategoryMap, ([key, value]) => ({
+		name: key,
+		value,
+	}));
 
 	return plantBiodervisity.push({
 		park: key,
-		totalPlants,
+		totalSpecies,
 		nativeBreakdown: {
 			totalNative,
 			totalNonNative,
@@ -169,19 +179,20 @@ plantByPark.forEach((value, key) => {
 		},
 		percentNative,
 		parkCode,
+		plantCategory,
 	});
 });
 
-// sort plantBiodervisity by totalPlants
+// sort plantBiodervisity by totalSpecies
 const plantBiodervisitySorted = plantBiodervisity.sort(
-	(a, b) => b.totalPlants - a.totalPlants
+	(a, b) => b.totalSpecies - a.totalSpecies
 );
 
 const animalsByPark = divideSpecicies.get(false);
 
 const animalBiodiversity = [];
 animalsByPark.forEach((value, key) => {
-	const totalAnimals = value.length;
+	const totalSpecies = value.length;
 	const nativeDivide = d3.rollup(
 		value,
 		(v) => v.length,
@@ -189,8 +200,8 @@ animalsByPark.forEach((value, key) => {
 	);
 	const totalNative = nativeDivide.get(native) || 0;
 	const totalNonNative = nativeDivide.get(nonNative) || 0;
-	const totalUknownNative = totalAnimals - totalNative - totalNonNative;
-	const percentNative = totalNative / totalAnimals;
+	const totalUknownNative = totalSpecies - totalNative - totalNonNative;
+	const percentNative = totalNative / totalSpecies;
 	const animalCategoryMap = d3.rollup(
 		value,
 		(v) => v.length,
@@ -204,7 +215,7 @@ animalsByPark.forEach((value, key) => {
 
 	return animalBiodiversity.push({
 		park: key,
-		totalAnimals,
+		totalSpecies,
 		nativeBreakdown: {
 			totalNative,
 			totalNonNative,
@@ -217,7 +228,7 @@ animalsByPark.forEach((value, key) => {
 
 // sort animalBiodiversity by totalAnimals
 const animalBiodiversitySorted = animalBiodiversity.sort(
-	(a, b) => b.totalAnimals - a.totalAnimals
+	(a, b) => b.totalSpecies - a.totalSpecies
 );
 
 const plantTotals = [];
@@ -245,7 +256,51 @@ parksTotalSpeciesCount.forEach((total, park) => {
 		total,
 		totalPlants,
 		totalAnimals,
+		categories: ["totalPlants", "totalAnimals"],
 	});
+});
+
+const conservationStatusByPark = d3.group(
+	speciesData,
+	(d) => d["Park Name"],
+	(d) => d["Conservation Status"]
+);
+
+const concern = "Species of Concern";
+const threatened = "Threatened";
+const endangered = "Endangered";
+const inRecovery = "In Recovery";
+const underReview = "Under Review";
+const proposedThreatened = "Proposed Threatened";
+const categoriesEndangered = [
+	concern,
+	threatened,
+	endangered,
+	inRecovery,
+	underReview,
+	proposedThreatened,
+];
+
+const endangeredSpeciesStackedBar = [];
+
+conservationStatusByPark.forEach((value, park) => {
+	const parkInfo = { park, categories: categoriesEndangered };
+	let total = 0;
+	value.forEach((statusValue, status) => {
+		parkInfo[status] = statusValue.length;
+		if (categoriesEndangered.includes(status)) {
+			total += statusValue.length;
+		}
+	});
+	parkInfo.total = total;
+	const objKeys = Object.keys(parkInfo);
+	const missingCategories = categoriesEndangered.filter(
+		(x) => !objKeys.includes(x)
+	);
+	missingCategories.forEach((category) => {
+		parkInfo[category] = 0;
+	});
+	endangeredSpeciesStackedBar.push(parkInfo);
 });
 
 // endangered species
@@ -255,12 +310,6 @@ parksTotalSpeciesCount.forEach((total, park) => {
 // 	speciesData,
 // 	(d) => d["Conservation Status"]
 // );
-
-const conservationStatusByPark = d3.group(
-	speciesData,
-	(d) => d["Park Name"],
-	(d) => d["Conservation Status"]
-);
 
 const endangeredAnimalsTreemapData = {
 	name: "National Parks Endangered Animal Species",
@@ -320,6 +369,52 @@ conservationStatusByPark.forEach((value, key) => {
 	endangeredPlantsMap.set(key, endangeredPlants);
 });
 
+const plantCategoriesTreemapData = new Map();
+const animalCategoriesTreemapData = new Map();
+
+animalBiodiversitySorted.forEach((d) => {
+	const treeData = {
+		name: d.park,
+		children: d.animalCategory.map((category) => ({
+			name: category.name,
+			value: category.value,
+		})),
+	};
+
+	animalCategoriesTreemapData.set(d.park, treeData);
+});
+
+plantBiodervisitySorted.forEach((d) => {
+	const treeData = {
+		name: d.park,
+		children: d.plantCategory.map((category) => ({
+			name: category.name,
+			value: category.value,
+		})),
+	};
+
+	plantCategoriesTreemapData.set(d.park, treeData);
+});
+
+const parkAllSpeciesTreemapData = new Map();
+parksData.forEach((d) => {
+	const parkName = d["Park Name"];
+	const treeData = {
+		name: parkName,
+		children: [
+			{
+				name: "Plants",
+				children: plantCategoriesTreemapData.get(parkName).children,
+			},
+			{
+				name: "Animals",
+				children: animalCategoriesTreemapData.get(parkName).children,
+			},
+		],
+	};
+	parkAllSpeciesTreemapData.set(parkName, treeData);
+});
+
 export {
 	//treemaps
 	endangeredAnimalsTreemapData, // for treemap of endangered animals
@@ -338,4 +433,9 @@ export {
 	totalSpeciesMaxMin,
 	//stacked bar chart
 	parkTotalsStackedBar,
+	endangeredSpeciesStackedBar,
+	//species categories treemaps
+	animalCategoriesTreemapData,
+	plantCategoriesTreemapData,
+	parkAllSpeciesTreemapData,
 };

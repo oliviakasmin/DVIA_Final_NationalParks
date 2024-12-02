@@ -14,7 +14,6 @@ const margin = {
 };
 
 export const createBiodiversityScatter = (data, type) => {
-	const plotImage = type === "plant" ? "🍁" : "🐿️";
 	const fillColor = type === "plant" ? plantColor : animalColor;
 	const highlightColor = type === "plant" ? animalColor : plantColor;
 
@@ -35,7 +34,7 @@ export const createBiodiversityScatter = (data, type) => {
 		.range([margin.left, svgWidth - margin.right]);
 	const yScale = d3
 		.scaleLinear()
-		.domain([0, 1])
+		.domain([0, 100])
 		.range([svgHeight - margin.bottom, margin.top]);
 
 	//append the axes
@@ -55,7 +54,7 @@ export const createBiodiversityScatter = (data, type) => {
 		.attr("text-anchor", "middle")
 		.attr("x", svgWidth / 2)
 		.attr("y", svgHeight - margin.bottom / 2)
-		.text("Total Plant Species");
+		.text(`Total ${type === "plant" ? "Plant" : "Animal"} Species`);
 
 	// Append y-axis label
 	axesLayer
@@ -67,17 +66,7 @@ export const createBiodiversityScatter = (data, type) => {
 		.attr("y", margin.left / 2)
 		.text("Percent of Species that are Native");
 
-	const tooltip = d3
-		.select("body")
-		.append("div")
-		.attr("class", "tooltip")
-		.style("position", "absolute")
-		.style("background", "white")
-		// .style("border", "1px solid #ccc")
-		.style("padding", "5px")
-		.style("display", "none")
-		.style("z-index", "1000")
-		.style("border-radius", "5px");
+	const tooltip = d3.select("body").append("div").attr("class", "tooltip");
 
 	//append the data points
 	plotLayer
@@ -86,26 +75,21 @@ export const createBiodiversityScatter = (data, type) => {
 		.enter()
 		.append("circle")
 		.attr("cx", (d) => xScale(d.totalSpecies))
-		.attr("cy", (d) => yScale(d.percentNative))
+		.attr("cy", (d) => yScale(d.percentNative * 100))
 		.attr("r", 5)
 		.attr("fill", fillColor)
-		// .append("text")
-		// .attr("x", (d) => {
-		// 	return xScale(d.totalSpecies);
-		// })
-		// .attr("y", (d) => yScale(d.percentNative))
-		// .attr("font-size", "16px")
-		// .attr("text-anchor", "middle")
-		// .attr("dy", ".35em")
-		// .text(plotImage)
 		.on("mouseover", (event, d) => {
 			//show tooltip
 			tooltip
 				.style("display", "block")
 				.html(
 					`${d.park}<br>
-                    total species: ${d.totalSpecies}<br>
-                    percent native: ${parseFloat(d.percentNative.toFixed(2))}
+                    ${type === "plant" ? "Plant" : "Animal"} species: ${
+						d.totalSpecies
+					}<br>
+                    Percent native: ${
+											parseFloat(d.percentNative.toFixed(2)) * 100
+										}%
                     `
 				)
 				.style("left", `${event.pageX + 10}px`)

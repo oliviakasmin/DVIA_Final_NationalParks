@@ -8,10 +8,10 @@ const svgWidth = barChartDiv.node().clientWidth;
 const svgHeight = barChartDiv.node().clientHeight;
 
 const margin = {
-	top: 20,
+	top: 100,
 	right: 20,
 	bottom: 160,
-	left: 60,
+	left: 80,
 };
 
 const svg = barChartDiv
@@ -50,10 +50,7 @@ export const createBarChart = (data) => {
 		.nice(); //nice() rounds the domain to make it look better
 
 	// Append the axes
-	axesLayer
-		.append("g")
-		.attr("transform", `translate(${margin.left} 0)`) //move the axis to the right by margin.left so it renders inside the svg canvas
-		.call(d3.axisLeft(yScale));
+	axesLayer.append("g").attr("transform", `translate(${margin.left} 0)`);
 
 	axesLayer
 		.append("g")
@@ -66,6 +63,28 @@ export const createBarChart = (data) => {
 		.attr("dx", "-1.5em")
 		.attr("dy", "0.5em")
 		.text((d) => parkNameDisplay(d));
+
+	// Append the x-axis title
+	axesLayer
+		.append("text")
+		.attr("class", "x-axis-title")
+		.attr("text-anchor", "middle")
+		.attr("x", svgWidth / 2)
+		.attr("y", svgHeight - margin.bottom / 2 + 60)
+		.text("Parks");
+
+	// Append the y-axis title
+	axesLayer
+		.append("text")
+		.attr("class", "y-axis-title")
+		.attr("text-anchor", "middle")
+		.attr("transform", "rotate(-90)")
+		.attr("x", -svgHeight / 2)
+		.attr("y", margin.left / 2)
+		.text("Total Species");
+
+	// Create a tooltip element
+	const tooltip = d3.select("body").append("div").attr("class", "tooltip");
 
 	barsLayer
 		.selectAll("g")
@@ -84,12 +103,36 @@ export const createBarChart = (data) => {
 			// console.log(d);
 			return yScale(d[0]) - yScale(d[1]);
 		})
-		.attr("width", xScale.bandwidth());
+		.attr("width", xScale.bandwidth())
+		.on("mouseover", (event, d) => {
+			const parkData = d.data;
+			const tooltipContent = categories
+				.map((category) => {
+					const value = parkData[category];
+					if (value === 0) return "";
+					return `<strong>${category}:</strong> ${value}`;
+				})
+				.join("<br>");
+
+			tooltip
+				.style("display", "block")
+				.html(`<strong>${parkData.park}</strong><br>${tooltipContent}`)
+				.style("left", `${event.pageX + 10}px`)
+				.style("top", `${event.pageY + 10}px`);
+		})
+		.on("mousemove", (event) => {
+			tooltip
+				.style("left", `${event.pageX + 10}px`)
+				.style("top", `${event.pageY + 10}px`);
+		})
+		.on("mouseout", () => {
+			tooltip.style("display", "none");
+		});
 
 	// Add legend
 	const legend = svg
 		.append("g")
-		.attr("transform", `translate(${svgWidth - 150}, ${margin.top})`);
+		.attr("transform", `translate(${svgWidth - 200}, ${margin.top - 60})`);
 
 	categories.forEach((category, i) => {
 		const legendRow = legend

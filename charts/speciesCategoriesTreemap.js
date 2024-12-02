@@ -27,23 +27,11 @@ export const createSpeciesCategoriesTreeMap = (data, type) => {
 	d3.treemap().size([svgWidth, svgHeight]).padding(1)(root);
 
 	// Create a tooltip element
-	const tooltip = d3
-		.select("body")
-		.append("div")
-		.attr("class", "tooltip")
-		.style("position", "absolute")
-		.style("background", "white")
-		.style("border", "1px solid #ccc")
-		.style("padding", "5px")
-		.style("display", "none")
-		.style("z-index", "1000")
-		.style("border-radius", "5px");
-
-	// const greenGradientColors = ["#c5cb52", "#3c3e13"];
+	const tooltip = d3.select("body").append("div").attr("class", "tooltip");
 
 	const purpleGradient = [
-		"#fff",
 		"#dfddf6",
+		"#cccaf0",
 		"#948edf",
 		"#6e66d4",
 		"#483ec9",
@@ -102,40 +90,22 @@ export const createSpeciesCategoriesTreeMap = (data, type) => {
 		.append("text")
 		.attr("dx", 4)
 		.attr("dy", 14)
-		.text((d) => d.data.name);
-
-	// Create a legend
-	// const svgLegend = treeMapDivElement
-	// 	.append("svg")
-	// 	.attr("viewBox", `0 0 ${svgWidth} ${100}`)
-	// 	.attr("width", svgWidth)
-	// 	.attr("height", 100);
-
-	// const legend = svgLegend
-	// 	.append("g")
-	// 	.attr("class", "legend")
-	// 	.attr("transform", `translate(0, 20)`);
-
-	// const legendItems = root.leaves();
-
-	// console.log(legendItems);
-
-	// legendItems.forEach((item, i) => {
-	// 	const legendItem = legend
-	// 		.append("g")
-	// 		.attr("transform", `translate( ${i * 50}, 0)`);
-
-	// 	legendItem
-	// 		.append("rect")
-	// 		.attr("width", 18)
-	// 		.attr("height", 18)
-	// 		.attr("fill", colorScale(item.data.name));
-
-	// 	legendItem
-	// 		.append("text")
-	// 		.attr("x", 24)
-	// 		.attr("y", 9 + 18)
-	// 		.attr("dy", "0.35em")
-	// 		.text(item.data.name);
-	// });
+		// .text((d) => d.data.name);
+		.each(function (d) {
+			const words = d.data.name.split(" ");
+			if (words.length === 2) {
+				d3.select(this)
+					.append("tspan")
+					.attr("x", 0)
+					.attr("dy", "1em")
+					.text(words[0]);
+				d3.select(this)
+					.append("tspan")
+					.attr("x", 4)
+					.attr("dy", "1em")
+					.text(words[1]);
+			} else {
+				d3.select(this).text(d.data.name);
+			}
+		});
 };

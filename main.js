@@ -9,6 +9,13 @@ import {
 	animalBiodiversitySorted,
 } from "./data_utils";
 
+// intro down arrow scroll to map
+const introDownArrow = d3.select("#down_arrow-intro");
+const mapSection = document.getElementById("map-section");
+introDownArrow.on("click", () => {
+	mapSection.scrollIntoView({ behavior: "smooth" });
+});
+
 // down arrows scroll to biodiversity charts
 const downArrowButton = d3.select("#down_arrow");
 const scatterChartSection = document.getElementById("native-scattter-section");
@@ -18,7 +25,6 @@ downArrowButton.on("click", () => {
 });
 
 // add functionality to plant/animal biodiversity buttons
-const biodiversityTitle = d3.select("#biodiversity-title");
 
 const plantsButton = d3.select("#plants_button");
 const animalsButton = d3.select("#animals_button");
@@ -34,9 +40,7 @@ plantsButton
 	.classed("plantButtonNotSelected", false);
 
 const onClickPlantsButton = () => {
-	biodiversityTitle.text("Plant Biodiversity");
 	createBiodiversityScatter(plantBiodervisitySorted, "plant");
-
 	animalsButton
 		.style("display", "block")
 		.classed("animalButtonNotSelected", true)
@@ -48,7 +52,6 @@ const onClickPlantsButton = () => {
 };
 
 const onClickAnimalsButton = () => {
-	biodiversityTitle.text("Animal Biodiversity");
 	createBiodiversityScatter(animalBiodiversitySorted, "animal");
 	animalsButton
 		.style("display", "block")

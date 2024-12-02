@@ -254,9 +254,9 @@ parksTotalSpeciesCount.forEach((total, park) => {
 	parkTotalsStackedBar.push({
 		park,
 		total,
-		totalPlants,
-		totalAnimals,
-		categories: ["totalPlants", "totalAnimals"],
+		"Total Plants": totalPlants,
+		"Total Animals": totalAnimals,
+		categories: ["Total Plants", "Total Animals"],
 	});
 });
 

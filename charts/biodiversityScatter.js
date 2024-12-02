@@ -1,6 +1,10 @@
 import "../style.css";
 import * as d3 from "d3";
-import { plantColor, animalColor } from "../design_utils";
+import {
+	plantColor,
+	animalColor,
+	formatNumberWithCommas,
+} from "../design_utils";
 
 const chartDiv = d3.select("#scatterplot");
 const svgWidth = chartDiv.node().clientWidth;
@@ -84,9 +88,9 @@ export const createBiodiversityScatter = (data, type) => {
 				.style("display", "block")
 				.html(
 					`${d.park}<br>
-                    ${type === "plant" ? "Plant" : "Animal"} species: ${
-						d.totalSpecies
-					}<br>
+                    ${
+											type === "plant" ? "Plant" : "Animal"
+										} species: ${formatNumberWithCommas(d.totalSpecies)}<br>
                     Percent native: ${
 											parseFloat(d.percentNative.toFixed(2)) * 100
 										}%

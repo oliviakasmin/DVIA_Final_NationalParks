@@ -54,21 +54,7 @@ export const createMap = async () => {
 	);
 
 	const maxParkColor = "#4a1f0e";
-	// "#2f1201";
-	// "#4a1f0e";
-	// "#fa06e6";
-	//
-	// "#06fa08";
-	// "#6e66d4";
-	// "#1b8e13"; green
 	const leastParkColor = "#e49373";
-	// "#fcbe99";
-	// "#E49273";
-	// "#0569f7";
-	//  "#ff7f38";
-	// "#ffa938";
-	// "#f3f9ac";
-	// "#b68400"; mustard
 
 	// Create a color scale based on relativeTotalSpecies
 	const colorScale = d3

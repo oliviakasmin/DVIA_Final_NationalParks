@@ -13,8 +13,11 @@ export const palette = [
 	plantColor,
 	animalColor,
 	"#9AC2C9", // light blue
-	"#E49273", // peach
-	"#053B06", // dark green
 	"#FA7921", // orange
-	"#0A2239", //dark blue
+	"#053B06", // dark green
+	"#FCFCFC", // white-ish
+	"#E49273", // peach
+	"#EE4266", //red
+	"#06D6A0", // teal
+	"#08605F", // dark blue/green
 ];

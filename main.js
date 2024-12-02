@@ -5,6 +5,8 @@ import { createMap, createBarChart, createBiodiversityScatter } from "./charts";
 import {
 	parkTotalsStackedBar,
 	endangeredSpeciesStackedBar,
+	animalsStackedBar,
+	plantsStackedBar,
 	plantBiodervisitySorted,
 	animalBiodiversitySorted,
 } from "./data_utils";
@@ -16,15 +18,20 @@ introDownArrow.on("click", () => {
 	mapSection.scrollIntoView({ behavior: "smooth" });
 });
 
-// down arrows scroll to biodiversity charts
-const downArrowButton = d3.select("#down_arrow");
+// down arrow from map to scroll to scatter chart
+const mapDownArrowButton = d3.select("#down_arrow");
 const scatterChartSection = document.getElementById("native-scattter-section");
-
-downArrowButton.on("click", () => {
+mapDownArrowButton.on("click", () => {
 	scatterChartSection.scrollIntoView({ behavior: "smooth" });
 });
 
-// add functionality to plant/animal biodiversity buttons
+const scatterDownArrowButton = d3.select("#down_arrow_scatter");
+const barChartSection = document.getElementById("bar-section");
+scatterDownArrowButton.on("click", () => {
+	barChartSection.scrollIntoView({ behavior: "smooth" });
+});
+
+// add functionality to plant/animal buttons
 
 const plantsButton = d3.select("#plants_button");
 const animalsButton = d3.select("#animals_button");
@@ -88,6 +95,10 @@ dataDropdown.on("change", function () {
 		barChartData = parkTotalsStackedBar;
 	} else if (dataValue === "endangered") {
 		barChartData = endangeredSpeciesStackedBar;
+	} else if (dataValue === "animals") {
+		barChartData = animalsStackedBar;
+	} else if (dataValue === "plants") {
+		barChartData = plantsStackedBar;
 	}
 	barChartData = sortData(barChartData, sortValue);
 	createBarChart(barChartData);

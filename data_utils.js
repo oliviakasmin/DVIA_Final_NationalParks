@@ -33,13 +33,6 @@ const getParkCode = (parkName) => {
 	return parkDataMap.get(parkName)[0]["Park Code"];
 };
 
-// find all categories of species
-// const categories = d3.rollup(
-// 	speciesData,
-// 	(v) => v.length,
-// 	(d) => d.Category
-// );
-
 const mammal = "Mammal";
 const bird = "Bird";
 const reptile = "Reptile";
@@ -74,14 +67,6 @@ const animals = [
 // 	console.log(animals.includes(key) || plants.includes(key));
 // });
 
-// find all nativeness of species
-// const nativeness = d3.rollup(
-// 	speciesData,
-// 	(v) => v.length,
-// 	(d) => d.Nativeness
-// );
-
-// find all occurrence of species
 const abundanceCategories = d3.rollup(
 	speciesData,
 	(v) => v.length,
@@ -303,6 +288,40 @@ conservationStatusByPark.forEach((value, park) => {
 	endangeredSpeciesStackedBar.push(parkInfo);
 });
 
+const animalsStackedBar = [];
+animalBiodiversitySorted.forEach((d) => {
+	const parkInfo = { park: d.park, categories: animals, total: d.totalSpecies };
+	d.animalCategory.forEach((category) => {
+		parkInfo[category.name] = category.value;
+	});
+
+	const objKeys = Object.keys(parkInfo);
+	const missingCategories = animals.filter((x) => !objKeys.includes(x));
+	missingCategories.forEach((category) => {
+		parkInfo[category] = 0;
+	});
+
+	animalsStackedBar.push(parkInfo);
+});
+
+const plantsStackedBar = [];
+plantBiodervisitySorted.forEach((d) => {
+	const parkInfo = { park: d.park, categories: plants, total: d.totalSpecies };
+	d.plantCategory.forEach((category) => {
+		parkInfo[category.name] = category.value;
+	});
+
+	const objKeys = Object.keys(parkInfo);
+	const missingCategories = plants.filter((x) => !objKeys.includes(x));
+	missingCategories.forEach((category) => {
+		parkInfo[category] = 0;
+	});
+
+	plantsStackedBar.push(parkInfo);
+});
+
+console.log(plantsStackedBar);
+
 // endangered species
 
 // find all conservation status of species
@@ -434,6 +453,8 @@ export {
 	//stacked bar chart
 	parkTotalsStackedBar,
 	endangeredSpeciesStackedBar,
+	animalsStackedBar,
+	plantsStackedBar,
 	//species categories treemaps
 	animalCategoriesTreemapData,
 	plantCategoriesTreemapData,

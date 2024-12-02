@@ -20,6 +20,10 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+h1 {
+	font-size: 2.25em;
+}
+
 section {
 	padding: 20px;
 	height: 100vh;
@@ -28,6 +32,8 @@ section {
 #intro-section {
 	padding-top: 0px;
 	margin-top: -100px;
+	width: 100%;
+	text-align: center;
 }
 
 #app {
@@ -41,10 +47,31 @@ section {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	margin-left: 200px;
+	margin-right: 200px;
+
+	a {
+		/* text-decoration: none; */
+		color: inherit;
+		&:hover {
+			text-decoration: underline;
+			color: #888d2a;
+		}
+	}
+}
+
+.span-title {
+	color: #888d2b;
+}
+
+#arrow-container-intro {
+	margin-top: 60px;
 }
 
 #nps-logo {
-	width: 200px;
+	width: 160px;
+	margin-top: 20px;
+	margin-bottom: 40px;
 }
 
 #map-container {
@@ -70,6 +97,10 @@ section {
 	fill-opacity: 0.2;
 }
 
+.leaflet-control {
+	font-family: "Inconsolata", monospace;
+}
+
 #park_info {
 	/* margin: 20px; */
 	border-radius: 5px;
@@ -83,6 +114,7 @@ section {
 	justify-content: center;
 	padding-left: 24px;
 	position: relative; /* Ensure the container is positioned relative */
+	text-align: center;
 }
 
 .park_info_open {
@@ -153,13 +185,18 @@ section {
 
 #footer {
 	width: 100%;
+	/* height: 100px; */
 	color: #fff0db;
 	background-color: black;
 	border-top: 1px solid black;
 	padding: 10px;
 	text-align: center;
-	height: 5vh;
+	/* height: 5vh; */
 	bottom: 0;
+}
+
+#footer-content {
+	margin: 20px;
 }
 
 .down_arrow {
@@ -170,23 +207,24 @@ section {
 		font-size: larger;
 		/* text-decoration: underline; */
 		/* text-decoration-color: #888d2a; */
-		/* color: #888d2a; */
+		color: #888d2a;
 		/* font-weight: bold; */
 	}
 }
 
-/* #down_arrow:hover {
-	cursor: pointer;
-	font-size: larger;
-	text-decoration: underline;
-	text-decoration-color: #888d2a;
-} */
+#arrow-container-scatter {
+	margin-top: 12px;
+}
 
 .arrow-container {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	margin-top: 32px;
+}
+
+.down_arrow-img {
+	width: 50px;
 }
 
 .hidden {

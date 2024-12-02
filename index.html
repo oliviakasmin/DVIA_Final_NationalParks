@@ -24,12 +24,32 @@
 		<div id="app">
 			<section id="intro-section">
 				<div id="title-page">
-					<h1>Exploring Biodiversity in U.S. National Parks</h1>
+					<h1>
+						Exploring <span class="span-title">Biodiversity</span> in U.S.
+						National Parks
+					</h1>
+					<h4>
+						Data Visualization & Information Aesthetics | Final Project | Olivia
+						Kasmin
+					</h4>
+
 					<image
 						src="public/assets/National_Park_Service_logo_PNG3.png"
 						alt="national parks"
 						id="nps-logo"
 					/>
+					<div>
+						This project visualizes animal and plant species data from 56 U.S.
+						National Parks found in this
+						<a
+							href="https://www.kaggle.com/datasets/nationalparkservice/park-biodiversity?select=species.csv"
+							target="_blank"
+							>dataset</a
+						>, which includes data sourced from the
+						<a href="https://irma.nps.gov/NPSpecies/" target="_blank">
+							National Park Service</a
+						>.
+					</div>
 					<div
 						id="arrow-container-intro"
 						class="buttonContainer arrow-container"
@@ -39,6 +59,7 @@
 							<img
 								src="public/assets/icons8-down-arrow-50.png"
 								alt="down arrow"
+								class="down_arrow-img"
 							/>
 						</button>
 					</div>
@@ -79,7 +100,6 @@
 				</div>
 				<div id="arrow-container" class="buttonContainer arrow-container">
 					<button id="down_arrow" class="down_arrow">
-						<!-- <div>discover more</div> -->
 						<img
 							src="public/assets/icons8-down-arrow-50.png"
 							alt="down arrow"
@@ -98,21 +118,36 @@
 						<button id="plants_button" class="plants_button">plants</button>
 						<button id="animals_button" class="animals_button">animals</button>
 					</div>
-					<!-- <h4 id="biodiversity-title">Plant Biodiversity</h4> -->
 					<div id="charts-container">
 						<div id="scatterplot"></div>
+					</div>
+					<div
+						id="arrow-container-scatter"
+						class="buttonContainer arrow-container"
+					>
+						<button id="down_arrow_scatter" class="down_arrow">
+							<img
+								src="public/assets/icons8-down-arrow-50.png"
+								alt="down arrow"
+							/>
+						</button>
 					</div>
 				</div>
 			</section>
 			<section id="bar-section">
 				<div id="bar-chart-container">
 					<h2>Explore</h2>
-					<!-- <div>Compare biodiversity across U.S. parks</div> -->
+					<div>
+						Compare the categorical distribution of all species, endangered
+						species, and plant and animal species across the national parks.
+					</div>
 					<div id="bar-chart-buttons" class="buttonContainer">
 						<label for="bar-chart-select">Choose data to display:</label>
 						<select name="bar-chart-select" id="bar-chart-select">
 							<option value="all">all species</option>
 							<option value="endangered">endangered species</option>
+							<option value="animals">animal species</option>
+							<option value="plants">plant species</option>
 						</select>
 						<label for="bar-chart-sort">Sort by:</label>
 						<select name="bar-chart-sort" id="bar-chart-sort">
@@ -124,7 +159,13 @@
 				</div>
 			</section>
 		</div>
-		<div id="footer">DVIA Final Project - Olivia Kasmin</div>
+		<div id="footer">
+			<div id="footer-content">
+				<div>Data Visualization & Information Aesthetics | Final Project</div>
+				<div>Olivia Kasmin</div>
+				<div>Fall 2024 | Parsons School of Design</div>
+			</div>
+		</div>
 		<script type="module" async src="/main.js"></script>
 		<script type="module" async src="/data_utils.js"></script>
 	</body>

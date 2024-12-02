@@ -1,7 +1,11 @@
 import "../style.css";
 import * as d3 from "d3";
 
-import { palette, parkNameDisplay } from "../design_utils";
+import {
+	palette,
+	parkNameDisplay,
+	formatNumberWithCommas,
+} from "../design_utils";
 
 const barChartDiv = d3.select("#bar-chart");
 const svgWidth = barChartDiv.node().clientWidth;
@@ -11,7 +15,7 @@ const margin = {
 	top: 100,
 	right: 20,
 	bottom: 160,
-	left: 80,
+	left: 100,
 };
 
 const svg = barChartDiv
@@ -31,8 +35,6 @@ export const createBarChart = (data) => {
 	const colorScale = d3.scaleOrdinal().domain(categories).range(palette);
 
 	const stackedData = d3.stack().keys(categories)(data);
-
-	console.log(stackedData);
 
 	const xScale = d3
 		.scaleBand()
@@ -64,6 +66,12 @@ export const createBarChart = (data) => {
 		.attr("dy", "0.5em")
 		.text((d) => parkNameDisplay(d));
 
+	axesLayer
+		.append("g")
+		.data(stackedData)
+		.attr("transform", `translate(${margin.left}, 0)`)
+		.call(d3.axisLeft(yScale));
+
 	// Append the x-axis title
 	axesLayer
 		.append("text")
@@ -80,7 +88,7 @@ export const createBarChart = (data) => {
 		.attr("text-anchor", "middle")
 		.attr("transform", "rotate(-90)")
 		.attr("x", -svgHeight / 2)
-		.attr("y", margin.left / 2)
+		.attr("y", margin.left / 2 - 10)
 		.text("Total Species");
 
 	// Create a tooltip element
@@ -105,18 +113,14 @@ export const createBarChart = (data) => {
 		})
 		.attr("width", xScale.bandwidth())
 		.on("mouseover", (event, d) => {
-			const parkData = d.data;
-			const tooltipContent = categories
-				.map((category) => {
-					const value = parkData[category];
-					if (value === 0) return "";
-					return `<strong>${category}:</strong> ${value}`;
-				})
-				.join("<br>");
-
+			const category = d3.select(event.target.parentNode).datum().key;
 			tooltip
 				.style("display", "block")
-				.html(`<strong>${parkData.park}</strong><br>${tooltipContent}`)
+				.html(
+					`${d.data.park}<br>
+					${category}: ${formatNumberWithCommas(d[1] - d[0])}
+					`
+				)
 				.style("left", `${event.pageX + 10}px`)
 				.style("top", `${event.pageY + 10}px`);
 		})
@@ -132,7 +136,7 @@ export const createBarChart = (data) => {
 	// Add legend
 	const legend = svg
 		.append("g")
-		.attr("transform", `translate(${svgWidth - 200}, ${margin.top - 60})`);
+		.attr("transform", `translate(${svgWidth - 200}, ${margin.top - 80})`);
 
 	categories.forEach((category, i) => {
 		const legendRow = legend

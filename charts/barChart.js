@@ -108,7 +108,6 @@ export const createBarChart = (data) => {
 		.attr("x", (d) => xScale(d.data.park))
 		.attr("y", (d) => yScale(d[1]))
 		.attr("height", (d) => {
-			// console.log(d);
 			return yScale(d[0]) - yScale(d[1]);
 		})
 		.attr("width", xScale.bandwidth())

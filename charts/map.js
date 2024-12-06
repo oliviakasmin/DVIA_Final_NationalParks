@@ -271,7 +271,7 @@ export const createMap = async () => {
 				.attr("role", "button")
 				.style("cursor", "pointer");
 
-			const icon = button
+			button
 				.append("img")
 				.attr("src", "../assets/refresh-icon.svg")
 				.style("transform", "scale(0.5)");
@@ -284,7 +284,7 @@ export const createMap = async () => {
 
 			return container.node();
 		},
-		onRemove: function (map) {},
+		onRemove: function () {},
 	});
 	const resetButton = new L.Control.ResetButton();
 	resetButton.addTo(map);

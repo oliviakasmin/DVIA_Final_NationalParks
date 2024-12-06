@@ -11,6 +11,14 @@ import {
 	animalBiodiversitySorted,
 } from "./data_utils";
 
+document.addEventListener("DOMContentLoaded", function () {
+	console.log("DOM fully loaded and parsed");
+});
+
+window.addEventListener("load", function () {
+	console.log("All resources finished loading!");
+});
+
 // intro down arrow scroll to map
 const introDownArrow = d3.select("#down_arrow-intro");
 const mapSection = document.getElementById("map-section");

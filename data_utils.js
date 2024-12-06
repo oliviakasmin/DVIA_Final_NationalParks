@@ -62,16 +62,11 @@ const animals = [
 	slugSnail,
 ];
 
-//  confirm all categories accounted for and either plant or animal
-// categories.forEach((value, key) => {
-// 	console.log(animals.includes(key) || plants.includes(key));
-// });
-
-const abundanceCategories = d3.rollup(
-	speciesData,
-	(v) => v.length,
-	(d) => d.Abundance
-);
+// const abundanceCategories = d3.rollup(
+// 	speciesData,
+// 	(v) => v.length,
+// 	(d) => d.Abundance
+// );
 
 // abundance by park
 const abundanceByPark = d3.group(
@@ -319,8 +314,6 @@ plantBiodervisitySorted.forEach((d) => {
 
 	plantsStackedBar.push(parkInfo);
 });
-
-console.log(plantsStackedBar);
 
 // endangered species
 

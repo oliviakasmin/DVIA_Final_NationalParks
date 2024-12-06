@@ -92,6 +92,10 @@ section {
 	/* margin: 20px; */
 }
 
+#loading {
+	font-size: smaller;
+}
+
 .leaflet-interactive {
 	stroke-width: 2px;
 	fill-opacity: 0.2;

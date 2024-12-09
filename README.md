@@ -1,4 +1,4 @@
-# Data Visualization & Information Aesthetics - Fall 2024 - Final Project
+# Data Visualization & Information Aesthetics - Parsons Fall 2024 - Final Project
 Data Visualization MS at Parsons School of Design
 
       

@@ -10,8 +10,6 @@
 	font-weight: 400;
 	font-style: normal;
 
-	color-scheme: light dark;
-
 	background-color: #fff0db;
 
 	font-synthesis: none;
@@ -20,8 +18,20 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+body {
+	color: black;
+}
+
 h1 {
-	font-size: 2.25em;
+	font-size: 2.5em;
+}
+
+h2 {
+	font-size: 30px;
+}
+
+h4 {
+	font-size: 20px;
 }
 
 section {
